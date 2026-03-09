@@ -1,0 +1,82 @@
+openapi: 3.0.0
+info:
+  title: Student Grades API
+  version: 1.0.0
+  description: A simple REST API for managing student grades
+
+servers:
+  - url: http://localhost:5000
+
+paths:
+  /students:
+    get:
+      summary: Get all students
+      responses:
+        '200':
+          description: List of students
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+
+    post:
+      summary: Create a new student
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StudentInput'
+      responses:
+        '201':
+          description: Student created successfully
+        '400':
+          description: Invalid input
+
+  /students/{id}:
+    get:
+      summary: Get student by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Student found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Student'
+        '404':
+          description: Student not found
+
+components:
+  schemas:
+    Student:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        grades:
+          type: object
+          additionalProperties:
+            type: number
+
+    StudentInput:
+      type: object
+      required:
+        - name
+        - grades
+      properties:
+        name:
+          type: string
+        grades:
+          type: object
+          additionalProperties:
+            type: number
